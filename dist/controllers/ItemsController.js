@@ -21,6 +21,24 @@ class ItemsController {
             });
         });
     }
+    show(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const items = yield prisma.item.findMany();
+            const sellers = yield prisma.seller.findMany({});
+            for (let i = 0; i < sellers.length; i++) {
+                const store = yield prisma.store.findMany({});
+                for (let j = 0; j < store.length; j++) {
+                    const items = yield prisma.item.findMany({});
+                    for (let k = 0; k < items.length; k++) {
+                        console.log("Seller: " + sellers[i].title + ', Store: ' + store[j].title + ', Items: ' + items[k].title);
+                    }
+                }
+            }
+            res.render('items/show', {
+                'items': items,
+            });
+        });
+    }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const seller = yield prisma.seller.findMany({});
@@ -36,18 +54,24 @@ class ItemsController {
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { check_1, check_2 } = req.body;
-            console.log(check_1, check_2);
-            // let mas1 = []
-            // let mas2 = []
-            // mas1.push(check_1)
-            // mas2.push(check_2)
-            yield prisma.store_items.create({
-                data: {
+            const exist = yield prisma.store_items.findMany({
+                where: {
                     item_id: Number(check_2),
                     store_id: Number(check_1)
                 }
             });
-            res.redirect('/');
+            if (exist[0] == undefined) {
+                yield prisma.store_items.create({
+                    data: {
+                        item_id: Number(check_2),
+                        store_id: Number(check_1)
+                    }
+                });
+                res.redirect('/');
+            }
+            else {
+                res.redirect('/');
+            }
         });
     }
 }

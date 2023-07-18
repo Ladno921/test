@@ -21,9 +21,9 @@ app.get("/", (req, res) => {
 app.get("/items", (req, res) => {
     itemsController.index(req, res);
 });
-// app.get("/items/:id", (req: Request, res: Response) => {
-//   itemsController.show(req, res);
-// });
+app.get("/items/show", (req, res) => {
+    itemsController.show(req, res);
+});
 app.get("/items/store", (req, res) => {
     itemsController.create(req, res);
 });

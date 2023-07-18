@@ -22,9 +22,9 @@ app.get("/items", (req: Request, res: Response) => {
   itemsController.index(req, res);
 });
 
-// app.get("/items/:id", (req: Request, res: Response) => {
-//   itemsController.show(req, res);
-// });
+app.get("/items/show", (req: Request, res: Response) => {
+  itemsController.show(req, res);
+});
 
 app.get("/items/store", (req: Request, res: Response) => {
   itemsController.create(req, res);
