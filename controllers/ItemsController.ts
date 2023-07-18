@@ -15,19 +15,54 @@ export class ItemsController {
     async show (req: Request, res: Response){
         const items: item[] = await prisma.item.findMany();
 
-        const sellers = await prisma.seller.findMany({})
+        const store = await prisma.store.findMany({})
 
-        for (let i = 0; i<sellers.length;i++){
-            const store = await prisma.store.findMany({})
-
-            for(let j = 0; j< store.length;j++){
-                const items = await prisma.item.findMany({})
-
-                for(let k = 0; k < items.length; k++){
-                    console.log("Seller: "+ sellers[i].title +', Store: '+ store[j].title +', Items: '+ items[k].title)
+        for(let i = 0; i < store.length; i++){
+            const seller = await prisma.seller.findMany({
+                where:{
+                    id: store[i].id
                 }
-            }
+            });
+            const stores = await prisma.store.findMany({
+                where:{
+                    id: seller[0].id
+                }
+            });
+            const items = await prisma.store.findMany({
+                where:{
+                    id: store[i].id
+                },
+                select:{
+                    items:{
+                        select:{
+                            items:{
+                                select:{
+                                    id:true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+            console.log(seller[0].title, stores[0].title)
+            
         }
+
+
+
+
+        // for (let i = 0; i<sellers.length;i++){
+        //     const store = await prisma.store.findMany({})
+
+        //     for(let j = 0; j< store.length;j++){
+        //         const items = await prisma.item.findMany({})
+
+        //         for(let k = 0; k < items.length; k++){
+        //             console.log("Seller: "+ sellers[i].title +', Store: '+ store[j].title +', Items: '+ items[k].title)
+        //         }
+        //     }
+        // }
 
         res.render('items/show', {
             'items': items,
