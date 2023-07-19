@@ -36,15 +36,16 @@ class ItemsController {
                         id: store[i].seller_id
                     }
                 });
-                const items = yield prisma.store.findMany({
+                const item = yield prisma.store.findMany({
                     where: {
-                        id: store[i].id
+                        id: store[i].seller_id
                     },
                     select: {
                         items: {
                             select: {
                                 items: {
                                     select: {
+                                        title: true,
                                         id: true
                                     }
                                 }
@@ -53,17 +54,11 @@ class ItemsController {
                     }
                 });
                 console.log(seller[0].title, stores[0].title);
-                console.log(items[0].items);
+                for (let i = 0; i < item[0].items.length; i++) {
+                    console.log(item[0].items[i].items.title);
+                }
+                console.log();
             }
-            // for (let i = 0; i<sellers.length;i++){
-            //     const store = await prisma.store.findMany({})
-            //     for(let j = 0; j< store.length;j++){
-            //         const items = await prisma.item.findMany({})
-            //         for(let k = 0; k < items.length; k++){
-            //             console.log("Seller: "+ sellers[i].title +', Store: '+ store[j].title +', Items: '+ items[k].title)
-            //         }
-            //     }
-            // }
             res.render('items/show', {
                 'items': items,
             });
