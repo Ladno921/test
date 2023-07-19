@@ -33,7 +33,7 @@ class ItemsController {
                 });
                 const stores = yield prisma.store.findMany({
                     where: {
-                        id: seller[0].id
+                        id: store[i].seller_id
                     }
                 });
                 const items = yield prisma.store.findMany({
@@ -53,6 +53,7 @@ class ItemsController {
                     }
                 });
                 console.log(seller[0].title, stores[0].title);
+                console.log(items[0].items);
             }
             // for (let i = 0; i<sellers.length;i++){
             //     const store = await prisma.store.findMany({})

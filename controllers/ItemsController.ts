@@ -25,7 +25,7 @@ export class ItemsController {
             });
             const stores = await prisma.store.findMany({
                 where:{
-                    id: seller[0].id
+                    id: store[i].seller_id
                 }
             });
             const items = await prisma.store.findMany({
@@ -45,7 +45,9 @@ export class ItemsController {
                 }
             })
 
+
             console.log(seller[0].title, stores[0].title)
+            console.log(items[0].items)
             
         }
 
