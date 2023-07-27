@@ -23,44 +23,27 @@ class ItemsController {
     }
     show(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const items = yield prisma.item.findMany();
-            const store = yield prisma.store.findMany({});
-            for (let i = 0; i < store.length; i++) {
-                const seller = yield prisma.seller.findMany({
-                    where: {
-                        id: store[i].id
-                    }
-                });
-                const stores = yield prisma.store.findMany({
-                    where: {
-                        id: store[i].seller_id
-                    }
-                });
-                const item = yield prisma.store.findMany({
-                    where: {
-                        id: store[i].seller_id
-                    },
-                    select: {
-                        items: {
-                            select: {
-                                items: {
-                                    select: {
-                                        title: true,
-                                        id: true
-                                    }
-                                }
-                            }
+            const store = yield prisma.store.findMany({
+                include: {
+                    seller: true,
+                    items: {
+                        include: {
+                            items: true
                         }
                     }
-                });
-                console.log(seller[0].title, stores[0].title);
-                for (let i = 0; i < item[0].items.length; i++) {
-                    console.log(item[0].items[i].items.title);
                 }
-                console.log();
+            });
+            const storeLen = store.length;
+            for (let i = 0; i < storeLen; i++) {
+                console.log('---------------');
+                console.log(store[i].title);
+                console.log(store[i].seller.title);
+                for (let k = 0; k < store[i].items.length; k++) {
+                    console.log(store[i].items[k].items.title);
+                }
             }
             res.render('items/show', {
-                'items': items,
+            // 'items': items,
             });
         });
     }
